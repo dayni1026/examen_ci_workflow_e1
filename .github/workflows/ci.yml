@@ -18,16 +18,13 @@ jobs:
       with:
         python-version: '3.11'
     
-    - name: Set up environment variables
+    - name: Create .env file from example
       run: |
-        # Copiar .env.example a .env si no existe
-        if [ ! -f .env ]; then
+        if [ -f .env.example ]; then
           cp .env.example .env
         fi
-        
-        # Opcional: Setear variables específicas
+        # Configurar PYTHONPATH para que encuentre los módulos
         echo "PYTHONPATH=${{ github.workspace }}" >> $GITHUB_ENV
-        echo "CI=true" >> $GITHUB_ENV
     
     - name: Install dependencies
       run: |
@@ -36,11 +33,5 @@ jobs:
     
     - name: Run tests with pytest
       run: |
-        pytest --cov=. --cov-report=xml tests/
-    
-    - name: Upload coverage to Codecov
-      if: always()
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: false
+        # Establecer PYTHONPATH explícitamente
+        PYTHONPATH=$PYTHONPATH:${{ github.workspace }} pytest tests/ -v
