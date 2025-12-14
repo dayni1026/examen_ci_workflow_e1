@@ -36,3 +36,4 @@ jobs:
         # Configurar PYTHONPATH para importaciones
         export PYTHONPATH=$PWD:$PYTHONPATH
         python -m pytest tests/ -v || echo "Tests completed"
+        
